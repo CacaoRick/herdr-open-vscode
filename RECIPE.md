@@ -45,6 +45,7 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
 - The palette can't list it. Palette entries come from Herdr's own list, the layouts and `commands()`; `mod.json` can't add one and `mod.open` is hidden there. A key or a button is the way in.
 - `programs.json` can't do this: a `run` entry starts on the space's machine, so VS Code would start over there.
 - VS Code lowercases URI authorities, so a Host with capitals, like `MacStudio`, must be hex-encoded or it won't match ssh config.
+- Herdr's JS has no `TextEncoder` (nor other web globals), and `bun test` won't notice: it has them. Prove `uri.js` inside Herdr too, e.g. a throwaway mod that asserts its output under `herdr-app check`.
 - Encode more than `encodeURIComponent` does: `!'()*` too. On Windows the URI passes through PowerShell and `code.cmd`.
 - The host must mean the same thing to this computer's ssh as to Herdr. Herdr's `target` normally does, because it came from the same ssh config.
 - `hosts.json` lives in the mod's folder and holds machine names, so don't publish yours.

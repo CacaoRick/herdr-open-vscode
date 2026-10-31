@@ -13,11 +13,16 @@ export function uriPath(folder) {
   return slashed.split("/").map(encodeSegment).join("/");
 }
 
+// Herdr's JS has no TextEncoder: encodeURIComponent gives the UTF-8 bytes.
+function utf8Hex(s) {
+  return encodeURIComponent(s)
+    .replace(/%([0-9A-F]{2})|([\s\S])/g, (_, hex, c) => (hex ?? c.charCodeAt(0).toString(16).padStart(2, "0")).toLowerCase());
+}
+
 // VS Code lowercases URI authorities, so a Host with capitals only survives hex-encoded.
 export function sshAuthority(host) {
   if (/^[a-z0-9._@-]+$/.test(host)) return `ssh-remote+${host}`;
-  const json = new TextEncoder().encode(JSON.stringify({ hostName: host }));
-  return `ssh-remote+${Array.from(json, (b) => b.toString(16).padStart(2, "0")).join("")}`;
+  return `ssh-remote+${utf8Hex(JSON.stringify({ hostName: host }))}`;
 }
 
 // host: null for a folder on this computer.

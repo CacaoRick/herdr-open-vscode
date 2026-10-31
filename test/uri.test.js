@@ -18,6 +18,15 @@ test("lowercase hosts stay readable", () => {
 test("capitals are hex-encoded", () => {
   expect(sshAuthority("MacStudio")).toBe(`ssh-remote+${hex('{"hostName":"MacStudio"}')}`);
 });
+test("hex is UTF-8, without TextEncoder", () => {
+  const original = globalThis.TextEncoder;
+  delete globalThis.TextEncoder;
+  try {
+    expect(sshAuthority("Mäc")).toBe(`ssh-remote+${hex('{"hostName":"Mäc"}')}`);
+  } finally {
+    globalThis.TextEncoder = original;
+  }
+});
 test("full URIs", () => {
   expect(folderUri("/w/a b", "box")).toBe("vscode-remote://ssh-remote+box/w/a%20b");
   expect(folderUri("/w/a b", null)).toBe("file:///w/a%20b");
