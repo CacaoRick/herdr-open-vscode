@@ -1,0 +1,6 @@
+{
+  "global": {
+    "ctrl-shift-e": "mod.open:open-vscode",
+    "cmd-shift-e": "mod.open:open-vscode"
+  }
+}

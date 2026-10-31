@@ -1,0 +1,4 @@
+mods/open-vscode/hosts.json
+.DS_Store
+mods/**/*.d.ts
+mods/**/jsconfig.json
