@@ -23,9 +23,9 @@ The mod runs when something calls `mod.open` with its name, so you can put it wh
 
 | Start it from | Set it up | Example |
 |---|---|---|
+| The + menu | Clone Herdr's menu, then add a row. See [below](#add-it-to-the--menu) | `run("mod.open", { name: "open-vscode" })` |
 | A key | Add a binding under `global` in `keys.json`, or merge this repo's `keys.json` | `"ctrl-shift-e": "mod.open:open-vscode"` |
 | A button or menu item | Call it from the click handler in your own mod | `.on_click(() => run("mod.open", { name: "open-vscode" }))` |
-| The + menu | Clone Herdr's menu, then add a row. See [below](#add-it-to-the--menu) | `run("mod.open", { name: "open-vscode" })` |
 | A shell or script | Nothing to set up | `herdr-app do mod.open --name open-vscode` |
 
 ### Add it to the + menu
@@ -38,10 +38,10 @@ The + menu is one of Herdr's own mods, which are read-only, so it needs a clone.
 herdr-app do mod.clone '{"name":"new-menu","as":"my-new-menu"}'
 ```
 
-**2. Add the row.** In `mods/my-new-menu/main.js`, at the end of `render`'s chain, the `worktree-open` row ends with `));`. Remove one `)` and the `;` from it and add this after it:
+**2. Add the row.** In `mods/my-new-menu/main.js`, add this line after the `terminal` row, or between any other two rows, wherever you want it in the menu:
 
 ```js
-      .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" })));
+      .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" })))
 ```
 
 **3. Make room for it.** In the same `render`, add one row's height (31) to both numbers in the menu's height: `491` becomes `522`, and `167` becomes `198`.
