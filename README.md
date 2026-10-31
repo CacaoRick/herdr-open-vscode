@@ -1,32 +1,42 @@
 # herdr-open-vscode
 
-A [Herdr](https://herdr.dev) mod: open the focused terminal's folder in your own VS Code, in one key.
+A [Herdr](https://herdr.dev) mod: open the focused terminal's folder in your own VS Code.
 
 ![Open in VS Code](preview.png)
 
 - A folder on this computer opens locally.
 - A folder on another machine opens through [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh): the window is here, the files stay there. Nothing is installed on the other machine.
 
-**Tested so far:** a local folder on macOS, and the URIs with unit tests. Windows-to-remote, the case it was built for, is not tested yet.
+**Tested so far:** local folders on macOS and Windows, and the URIs with unit tests. Windows-to-remote, the case it was built for, is not confirmed yet.
 
 ## Install
 
 Needs VS Code, plus Remote - SSH for other machines.
 
-Ask your agent to add `https://github.com/CacaoRick/herdr-open-vscode`, or do it by hand:
+Ask your agent to add `https://github.com/CacaoRick/herdr-open-vscode`, or copy `mods/open-vscode/` to `mods/` in your Herdr folder (`~/.config/herdr-app`).
 
-1. Copy `mods/open-vscode/` to `mods/` in your Herdr folder (`~/.config/herdr-app`).
-2. Merge `keys.json` into yours, or bind the key you like.
+This adds no panel or button. Choose how to start it below.
 
 ## Use
 
-Press `ctrl-shift-e` (`cmd-shift-e` on macOS). Herdr's command palette can't list mods yet, so use a key, or put it wherever your layout wants it:
+The mod runs when something calls `mod.open` with its name, so you can put it wherever suits your layout. Herdr's command palette can't list mods yet.
 
-| From | Write |
-|---|---|
-| A key | `"ctrl-shift-e": "mod.open:open-vscode"` in `keys.json` |
-| A button in your mod | `run("mod.open", { name: "open-vscode" })` |
-| A shell | `herdr-app do mod.open --name open-vscode` |
+| Start it from | Set it up | Example |
+|---|---|---|
+| A key | Add a binding under `global` in `keys.json`, or merge this repo's `keys.json` | `"ctrl-shift-e": "mod.open:open-vscode"` |
+| A button or menu item | Call it from the click handler in your own mod | `.on_click(() => run("mod.open", { name: "open-vscode" }))` |
+| The + menu | Clone the mods and layout below, then add a row to your `new-menu` clone | `this.row("vscode", icon, "Open in VS Code", () => run("mod.open", { name: "open-vscode" }))` |
+| A shell or script | Nothing to set up | `herdr-app do mod.open --name open-vscode` |
+
+The + menu is one of Herdr's own mods, which are read-only, so it needs clones. Clones don't receive Herdr's updates.
+
+```sh
+herdr-app do mod.clone '{"name":"new-menu","as":"my-new-menu"}'
+herdr-app do mod.clone '{"name":"tabs","as":"my-tabs"}'
+herdr-app do layout.clone '{"name":"main","as":"my-layout"}'
+```
+
+Then point `my-tabs` at `my-new-menu` (the `openOverlay` call on its + button), and point the `tabs` block in `layouts/my-layout.json` at `my-tabs`. Your menu grows by one row, so raise the height in that `openOverlay` call and in `my-new-menu`'s `render`.
 
 ## If the host doesn't match
 
