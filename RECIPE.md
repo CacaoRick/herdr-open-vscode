@@ -4,6 +4,8 @@ Press a key and the folder of the focused terminal opens in VS Code on the compu
 
 ![Open in VS Code](preview.png)
 
+The preview shows one way to start it: a row its owner added to a clone of the + menu. That row isn't part of the mod.
+
 ## What you see
 
 Nothing in the window until it's called: no panel, no block, no layout change.
