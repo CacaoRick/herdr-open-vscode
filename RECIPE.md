@@ -35,6 +35,7 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
   - `resolveHost`: as above.
 - `mods/open-vscode/main.js`: a `View` that does everything from `init`, inside `cx.spawn`, then calls `closeOverlay(props().overlay)`.
 - Herdr: `focused`, `spaces`, `theme`, `window`, `exec`, `hc`, `readTextFile`, `appHome`, `closeOverlay`, `props`.
+- `mods/open-vscode/vscode.svg`: a one-color icon, not used by the mod itself, for whoever adds it to a menu or button.
 - Programs, run on this computer, never on the remote machine:
   - Windows: `powershell -NoProfile -Command`, running `code --folder-uri <uri>` if `Get-Command code` finds it, else `Start-Process <protocol url>`.
   - macOS and Linux: `code --folder-uri <uri>`, else `open` or `xdg-open` with the protocol URL.

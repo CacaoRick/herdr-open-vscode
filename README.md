@@ -25,18 +25,45 @@ The mod runs when something calls `mod.open` with its name, so you can put it wh
 |---|---|---|
 | A key | Add a binding under `global` in `keys.json`, or merge this repo's `keys.json` | `"ctrl-shift-e": "mod.open:open-vscode"` |
 | A button or menu item | Call it from the click handler in your own mod | `.on_click(() => run("mod.open", { name: "open-vscode" }))` |
-| The + menu | Clone the mods and layout below, then add a row to your `new-menu` clone | `this.row("vscode", icon, "Open in VS Code", () => run("mod.open", { name: "open-vscode" }))` |
+| The + menu | Clone Herdr's menu, then add a row. See [below](#add-it-to-the--menu) | `run("mod.open", { name: "open-vscode" })` |
 | A shell or script | Nothing to set up | `herdr-app do mod.open --name open-vscode` |
 
-The + menu is one of Herdr's own mods, which are read-only, so it needs clones. Clones don't receive Herdr's updates.
+### Add it to the + menu
+
+The + menu is one of Herdr's own mods, which are read-only, so it needs a clone. Clones don't receive Herdr's updates. These names are examples.
+
+**1. Clone the menu.**
 
 ```sh
 herdr-app do mod.clone '{"name":"new-menu","as":"my-new-menu"}'
-herdr-app do mod.clone '{"name":"tabs","as":"my-tabs"}'
-herdr-app do layout.clone '{"name":"main","as":"my-layout"}'
 ```
 
-Then point `my-tabs` at `my-new-menu` (the `openOverlay` call on its + button), and point the `tabs` block in `layouts/my-layout.json` at `my-tabs`. Your menu grows by one row, so raise the height in that `openOverlay` call and in `my-new-menu`'s `render`.
+**2. Add the row.** In `mods/my-new-menu/main.js`, at the end of `render`'s chain, the `worktree-open` row ends with `));`. Remove one `)` and the `;` from it and add this after it:
+
+```js
+      .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" })));
+```
+
+**3. Make room for it.** In the same `render`, add one row's height (31) to both numbers in the menu's height: `491` becomes `522`, and `167` becomes `198`.
+
+**4. Point the + button at your menu.** This depends on your layout:
+
+- **You use Herdr's `main` layout:** clone the tab bar and the layout. `layout.clone` also switches you to the clone. Then, in `layouts/my-layout.json`, change the block with `"mod": "tabs"` to `"mod": "my-tabs"`.
+
+  ```sh
+  herdr-app do mod.clone '{"name":"tabs","as":"my-tabs"}'
+  herdr-app do layout.clone '{"name":"main","as":"my-layout"}'
+  ```
+
+- **Your layout already uses your own tab bar:** skip the clones and edit that mod.
+
+Then, in `main.js` of your tab bar, change the + button's `openOverlay` call:
+
+```js
+openOverlay({ mod: "my-new-menu", kind: "popup", width: 250, height: 543 })
+```
+
+**5. Check it.** Run `herdr-app check` on each mod you changed, for example `herdr-app check ~/.config/herdr-app/mods/my-new-menu`.
 
 ## If the host doesn't match
 
