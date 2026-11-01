@@ -45,8 +45,10 @@ herdr-app do mod.clone '{"name":"new-menu","as":"my-new-menu"}'
 **2. Add the row.** In `mods/my-new-menu/main.js`, add this line after the `terminal` row, or between any other two rows, wherever you want it in the menu:
 
 ```js
-      .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" })))
+      .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" }), shortcut("mod.open:open-vscode")))
 ```
+
+If you bind a key to `mod.open:open-vscode`, the row shows it, like Terminal's. With no key, that side stays empty.
 
 **3. Make room for it.** In the same `render`, add one row's height (31) to both numbers in the menu's height: `491` becomes `522`, and `167` becomes `198`.
 
