@@ -6,6 +6,7 @@ Works with:
 
 - Folders on this computer
 - Folders on any machine connected to Herdr over SSH, through the Remote - SSH extension
+- Folders in WSL, when it's connected to Herdr over SSH like any other machine
 
 ![Open in VS Code](preview.png)
 
@@ -29,7 +30,7 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
 - The machine is that space's `machine`. Null means this computer.
 - The host for ssh is the entry in `mods/open-vscode/hosts.json` for that machine name (`{"mac": "mac-studio"}`, optional), else the machine's `target` in `hc machine ls --json`. A machine reached with `--via`, or one with no usable target, gets an error naming `hosts.json`.
 - Esc closes the dialog, as with any dialog.
-- `keys.json` binds `ctrl-shift-e` and `cmd-shift-e`. Merge them, or bind anything else, or call `run("mod.open", { name: "open-vscode" })` from a button in your own layout.
+- `keys.json` binds `ctrl-shift-g` for Windows and Linux; `keys.macos.json` binds `cmd-g` for macOS. Merge only the one for this system, never both, and ask before replacing a key already in use. Or bind anything else, or call `run("mod.open", { name: "open-vscode" })` from a button in your own layout.
 
 ## Built from
 
@@ -42,6 +43,7 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
   - `resolveHost`: as above.
 - `mods/open-vscode/main.js`: a `View` that does everything from `init`, inside `cx.spawn`, then calls `closeOverlay(props().overlay)`.
 - Herdr: `focused`, `spaces`, `theme`, `window`, `exec`, `hc`, `readTextFile`, `appHome`, `closeOverlay`, `props`.
+- `keys.json` and `keys.macos.json`: one `global` binding each, to `mod.open:open-vscode`.
 - `mods/open-vscode/vscode.svg`: a one-color icon, not used by the mod itself, for whoever adds it to a menu or button.
 - Programs, run on this computer, never on the remote machine:
   - Windows: `powershell -NoProfile -Command`, running `code --folder-uri <uri>` if `Get-Command code` finds it, else `Start-Process <protocol url>`.
@@ -50,6 +52,9 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
 
 ## Watch out
 
+- Herdr's add-a-mod steps only mention `keys.json` and don't know `keys.macos.json`, so follow the rule above: on macOS merge `keys.macos.json` instead. The file names follow Herdr's `defaults/`.
+- G sits next to Terminal's T, with the same modifiers, so the two rows line up in a menu. Avoid `ctrl-shift-e` (Herdr's `pane.split:down`), `ctrl-e` (shells, nano and vim use it), and `ctrl-shift-c` and `ctrl-shift-v` (terminal copy and paste).
+- Herdr's `shortcut()` in the + menu shows one key per action, and not in file order. Keys for two systems on one action can show the wrong one; the README has the fix.
 - The palette can't list it. Palette entries come from Herdr's own list, the layouts and `commands()`; `mod.json` can't add one and `mod.open` is hidden there. A key or a button is the way in.
 - `programs.json` can't do this: a `run` entry starts on the space's machine, so VS Code would start over there.
 - VS Code lowercases URI authorities, so a Host with capitals, like `MacStudio`, must be hex-encoded or it won't match ssh config.
@@ -57,7 +62,7 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
 - Encode more than `encodeURIComponent` does: `!'()*` too. On Windows the URI passes through PowerShell and `code.cmd`.
 - The host must mean the same thing to this computer's ssh as to Herdr. Herdr's `target` normally does, because it came from the same ssh config.
 - `hosts.json` lives in the mod's folder and holds machine names, so don't publish yours.
-- Assumes VS Code here, with Remote - SSH for other machines. VS Code's own forks aren't handled. Only ssh remotes are.
+- Assumes VS Code here, with Remote - SSH for other machines. VS Code's own forks aren't handled. Only ssh remotes are, so WSL goes through Remote - SSH too, not VS Code's WSL extension.
 - Reads `~/.config/herdr-app/mods/open-vscode/hosts.json`. Runs `code`, `powershell`, `open` or `xdg-open`, and `hc`. No network of its own; Remote - SSH makes the connection.
 
 ## Done when
@@ -67,3 +72,5 @@ It closes by itself as soon as VS Code has been started, usually too fast to rea
 - In a terminal on another machine, the same command opens a Remote - SSH window on that terminal's folder, also with spaces and non-ASCII characters in the path.
 - After `cd` in the terminal, it opens the new folder, not the space's first one.
 - A machine with no usable host shows the error naming `hosts.json`, and Esc closes it.
+- The key for this system opens the folder and takes nothing else away.
+- If a menu row was added, `herdr-app check` passes on that clone, and with `herdr-app do mod.open --name my-new-menu`, `herdr-app shot menu.png`, `herdr-app do overlay.close` and `herdr-app status`, the shot shows the right key on the row and `errors` is empty. The check alone can't see a wrong key. The menu opens mid-window this way, and a menu you opened yourself may stay listed under overlays.
