@@ -1,13 +1,15 @@
 # herdr-open-vscode
 
-A [Herdr](https://herdr.dev) mod: open the focused terminal's folder in your own VS Code.
+A [Herdr](https://herdr.dev) mod: open the folder of your focused terminal in VS Code with a key or a button.
+
+Works with:
+
+- Folders on this computer
+- Folders on any machine connected to Herdr over SSH, through the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension
 
 ![Open in VS Code](preview.png)
 
 The mod adds no button of its own. This is one place to put it: a row in the + menu, set up as [below](#add-it-to-the--menu).
-
-- A folder on this computer opens locally.
-- A folder on another machine opens through [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh): the window is here, the files stay there. Nothing is installed on the other machine.
 
 **Tested so far:** local folders on macOS and Windows, and from Windows to a Mac and to WSL over Remote - SSH, with capitalized Hosts. The URIs have unit tests.
 
