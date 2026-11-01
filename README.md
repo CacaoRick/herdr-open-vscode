@@ -9,7 +9,7 @@ The mod adds no button of its own. This is one place to put it: a row in the + m
 - A folder on this computer opens locally.
 - A folder on another machine opens through [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh): the window is here, the files stay there. Nothing is installed on the other machine.
 
-**Tested so far:** local folders on macOS and Windows, and from Windows to a WSL machine over Remote - SSH, with a capitalized Host. The URIs have unit tests.
+**Tested so far:** local folders on macOS and Windows, and from Windows to a Mac and to WSL over Remote - SSH, with capitalized Hosts. The URIs have unit tests.
 
 ## Install
 
